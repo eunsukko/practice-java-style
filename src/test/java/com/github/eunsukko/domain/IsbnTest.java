@@ -45,7 +45,11 @@ class IsbnTest {
     // 3. ( a · b ) % 11 의 값을 J 로 정하되, 이 값이 10일 경우는 X로 표기한다. 점곱은 유클리드 내적이다. A*1+B*2+C*3+.....9*I
     @Test
     public void Isbn10이_유효한지를_체크번호를_통해_확인해요() {
+        String 숫자_10자리__체크번호가_틀림 = "8991268071"; // 원래 마지막이 2여야함
 
+        assertThatThrownBy(() -> Isbn.from(숫자_10자리__체크번호가_틀림))
+                .hasMessageContaining("체크번호")
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 

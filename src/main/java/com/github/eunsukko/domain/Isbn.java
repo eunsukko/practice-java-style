@@ -40,7 +40,7 @@ public class Isbn {
     // 3. ( a · b ) % 10 의 값이 0이 되어야 한다.
     private static int calculateCheckNumber13(String isbnString) {
         Vector baseVector = Vector.from(Arrays.asList(
-                1,3,1,3,1,3,1,3,1,3,1,3
+                1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3
         ));
 
         Vector targetVector = Vector.fromNumberString(isbnString.substring(0, 12));
@@ -65,12 +65,35 @@ public class Isbn {
             throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
         }
 
-        var tmpIsbn13String = String.format("978%s0", isbnString.substring(0,9));
+        if (calculateCheckNumber10(isbnString) != checkNumber(isbnString)) {
+            String message = String.format("\'%s\'은 체크번호가 틀립니다. (got: %d, expected: %d)", isbnString, calculateCheckNumber10(isbnString), checkNumber(isbnString));
+            throw new IllegalArgumentException(message);
+        }
+
+        return new Isbn(toIsbn13String(isbnString));
+    }
+
+    private static String toIsbn13String(String isbn10String) {
+        var tmpIsbn13String = String.format("978%s0", isbn10String.substring(0, 9));
         var isbn13String = String.format("%s%d",
-                tmpIsbn13String.substring(0,12),
+                tmpIsbn13String.substring(0, 12),
                 calculateCheckNumber13(tmpIsbn13String));
 
-        return new Isbn(isbn13String);
+        return isbn13String;
+    }
+
+    // 출처: 나무위키
+    // 1. 10 자리 ISBN을 (A,B,C,D,E,F,G,H,I,J) 라 하고, 마지막 J를 제외한 (A,B,C,D,E,F,G,H,I) 벡터를 만든다. 이 벡터를 b 라 한다.
+    // 2. a = (1,2,3,4,5,6,7,8,9) 라 한다.
+    // 3. ( a · b ) % 11 의 값을 J 로 정하되, 이 값이 10일 경우는 X로 표기한다. 점곱은 유클리드 내적이다. A*1+B*2+C*3+.....9*I
+    private static int calculateCheckNumber10(String isbnString) {
+        Vector baseVector = Vector.from(Arrays.asList(
+                1, 2, 3, 4, 5, 6, 7, 8, 9
+        ));
+
+        Vector targetVector = Vector.fromNumberString(isbnString.substring(0, 9));
+
+        return (int) (targetVector.dotProduct(baseVector) % 11);
     }
 
     private static boolean hasNotNumberCharacter(String isbnString) {
