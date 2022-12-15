@@ -1,7 +1,6 @@
 package com.github.eunsukko.domain;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import java.util.Objects;
 
@@ -10,11 +9,26 @@ public class Isbn {
     private final String isbn13;
 
     public static Isbn from(String isbnString) {
-        if (isbnString.length() != 10
-            && isbnString.length() != 13) {
-            throw new IllegalArgumentException("Isbn 은 10 or 13 자리의 숫자입니다");
+        if (isbnString.length() == 10) {
+            return isbn10(isbnString);
         }
 
+        if (isbnString.length() == 13) {
+            return isbn13(isbnString);
+        }
+
+        throw new IllegalArgumentException("Isbn 은 10 or 13 자리의 숫자입니다");
+    }
+
+    public static Isbn isbn13(String isbnString) {
+        if (hasNotNumberCharacter(isbnString)) {
+            throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
+        }
+
+        return new Isbn(isbnString);
+    }
+
+    public static Isbn isbn10(String isbnString) {
         if (hasNotNumberCharacter(isbnString)) {
             throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
         }
