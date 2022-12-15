@@ -1,9 +1,8 @@
 package com.github.eunsukko.domain;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -27,7 +26,38 @@ public class Isbn {
             throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
         }
 
+        if (calculateCheckNumber13(isbnString) != checkNumber(isbnString)) {
+            String message = String.format("\'%s\'은 체크번호가 틀립니다. (got: %d, expected: %d)", isbnString, calculateCheckNumber13(isbnString), checkNumber(isbnString));
+            throw new IllegalArgumentException(message);
+        }
+
         return new Isbn(isbnString);
+    }
+
+    // 출처: 나무위키
+    // 1. 13 자리 ISBN을 (A,B,C,D,E,F,G,H,I,J,K,L,M) 라 하고, 이 벡터를 b 라 한다.
+    // 2. a = (1,3,1,3,1,3,1,3,1,3,1,3,1) 라 한다.
+    // 3. ( a · b ) % 10 의 값이 0이 되어야 한다.
+    private static int calculateCheckNumber13(String isbnString) {
+        Vector baseVector = Vector.from(Arrays.asList(
+                1,3,1,3,1,3,1,3,1,3,1,3
+        ));
+
+        Vector targetVector = Vector.fromNumberString(isbnString.substring(0, 12));
+
+        int remainder = (int) (targetVector.dotProduct(baseVector) % 10);
+
+        return (10 - remainder) % 10;
+    }
+
+    private static int checkNumber(String isbnString) {
+        char lastCh = isbnString.charAt(isbnString.length() - 1);
+
+        if (lastCh == 'X' || lastCh == 'x') {
+            return 10;
+        }
+
+        return lastCh - '0';
     }
 
     public static Isbn isbn10(String isbnString) {
@@ -37,9 +67,6 @@ public class Isbn {
 
         return new Isbn(isbnString);
     }
-
-    // 수학에서 내적
-
 
     private static boolean hasNotNumberCharacter(String isbnString) {
         return !hasOnlyNumberCharacter(isbnString);

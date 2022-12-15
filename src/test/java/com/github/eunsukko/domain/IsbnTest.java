@@ -24,12 +24,11 @@ class IsbnTest {
     // 3. ( a · b ) % 10 의 값이 0이 되어야 한다.
     @Test
     public void Isbn13이_유효한지를_체크번호를_통해_확인해요() {
-        String 숫자_13자리 = "9791187506072";
+        String 숫자_13자리__체크번호가_틀림 = "9791187506073"; // 원래 마지막이 2여야함
 
-        var isbn = Isbn.from(숫자_13자리);
-
-        assertThat(isbn.toString())
-                .isEqualTo(숫자_13자리);
+        assertThatThrownBy(() -> Isbn.from(숫자_13자리__체크번호가_틀림))
+                .hasMessageContaining("체크번호")
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

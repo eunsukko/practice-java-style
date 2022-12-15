@@ -31,12 +31,34 @@ public class Vector {
         return from(numbers);
     }
 
-    private static boolean hasNotNumberCharacter(String isbnString) {
-        return !hasOnlyNumberCharacter(isbnString);
+    private static boolean hasNotNumberCharacter(String numberString) {
+        return !hasOnlyNumberCharacter(numberString);
     }
 
-    private static boolean hasOnlyNumberCharacter(String isbnString) {
-        return isbnString.chars()
+    private static boolean hasOnlyNumberCharacter(String numberString) {
+        return numberString.chars()
                 .allMatch(Character::isDigit);
+    }
+
+    public long dotProduct(Vector vector) {
+        if (size() != vector.size()) {
+            String message = String.format("size 가 서로 다른 vector 는 비교할 수 없습니다 vector1: %s, vector2: %s", this, vector);
+            throw new IllegalArgumentException(message);
+        }
+
+        long result = 0L;
+        for (int i = 0; i < size(); i++) {
+            result += (long) numberAt(i) * vector.numberAt(i);
+        }
+
+        return result;
+    }
+
+    public int size() {
+        return numbers.size();
+    }
+
+    private int numberAt(int index) {
+        return numbers.get(index);
     }
 }
