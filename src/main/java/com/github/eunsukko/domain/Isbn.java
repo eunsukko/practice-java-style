@@ -65,7 +65,12 @@ public class Isbn {
             throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
         }
 
-        return new Isbn(isbnString);
+        var tmpIsbn13String = String.format("978%s0", isbnString.substring(0,9));
+        var isbn13String = String.format("%s%d",
+                tmpIsbn13String.substring(0,12),
+                calculateCheckNumber13(tmpIsbn13String));
+
+        return new Isbn(isbn13String);
     }
 
     private static boolean hasNotNumberCharacter(String isbnString) {
