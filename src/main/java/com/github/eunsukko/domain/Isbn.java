@@ -16,7 +16,7 @@ public class Isbn {
         }
 
         if (hasNotNumberCharacter(isbnString)) {
-            throw new IllegalArgumentException("Isbn 은 10 or 13 자리의 숫자입니다");
+            throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
         }
 
         return new Isbn(isbnString);
@@ -27,13 +27,8 @@ public class Isbn {
     }
 
     private static boolean hasOnlyNumberCharacter(String isbnString) {
-        for (char ch : isbnString.toCharArray()) {
-            if ('0' <= ch && ch <= '9') continue;
-
-            return false;
-        }
-
-        return true;
+        return isbnString.chars()
+                .allMatch(Character::isDigit);
     }
 
     @Override
