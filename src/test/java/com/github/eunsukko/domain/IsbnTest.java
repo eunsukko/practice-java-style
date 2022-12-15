@@ -42,11 +42,17 @@ class IsbnTest {
 
     @Test
     public void Isbn은_특수문자를_포함할수_없어요() {
+        String 특수문자를_포함한_문자열 = "!001234567890";
 
+        assertThatThrownBy(() -> Isbn.from(특수문자를_포함한_문자열))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void Isbn은_한글을_포함할수_없어요() {
+        String 한글을_포함한_문자열 = "가001234567890";
 
+        assertThatThrownBy(() -> Isbn.from(한글을_포함한_문자열))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

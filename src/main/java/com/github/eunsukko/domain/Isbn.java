@@ -14,7 +14,26 @@ public class Isbn {
             && isbnString.length() != 13) {
             throw new IllegalArgumentException("Isbn 은 10 or 13 자리의 숫자입니다");
         }
+
+        if (hasNotNumberCharacter(isbnString)) {
+            throw new IllegalArgumentException("Isbn 은 10 or 13 자리의 숫자입니다");
+        }
+
         return new Isbn(isbnString);
+    }
+
+    private static boolean hasNotNumberCharacter(String isbnString) {
+        return !hasOnlyNumberCharacter(isbnString);
+    }
+
+    private static boolean hasOnlyNumberCharacter(String isbnString) {
+        for (char ch : isbnString.toCharArray()) {
+            if ('0' <= ch && ch <= '9') continue;
+
+            return false;
+        }
+
+        return true;
     }
 
     @Override
