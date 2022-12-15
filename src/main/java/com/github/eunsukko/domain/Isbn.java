@@ -1,7 +1,9 @@
 package com.github.eunsukko.domain;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -35,6 +37,9 @@ public class Isbn {
 
         return new Isbn(isbnString);
     }
+
+    // 수학에서 내적
+
 
     private static boolean hasNotNumberCharacter(String isbnString) {
         return !hasOnlyNumberCharacter(isbnString);
