@@ -53,16 +53,25 @@ public class Isbn {
     private static int checkNumber(String isbnString) {
         char lastCh = isbnString.charAt(isbnString.length() - 1);
 
-        if (lastCh == 'X' || lastCh == 'x') {
+        if (isX(lastCh)) {
             return 10;
         }
 
         return lastCh - '0';
     }
 
+    private static boolean isX(char ch) {
+        return ch == 'X' || ch == 'x';
+    }
+
     public static Isbn isbn10(String isbnString) {
-        if (hasNotNumberCharacter(isbnString)) {
+        if (hasNotNumberCharacter(isbnString.substring(0, 9))) {
             throw new IllegalArgumentException("Isbn 은 숫자로 이루어져야 합니다");
+        }
+
+        char lastCh = isbnString.charAt(9);
+        if (!(Character.isDigit(lastCh) || isX(lastCh))) {
+            throw new IllegalArgumentException("Isbn10 의 마지막은 숫자 혹은 X 만 가능합니다");
         }
 
         if (calculateCheckNumber10(isbnString) != checkNumber(isbnString)) {
